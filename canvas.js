@@ -3,7 +3,8 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 const context = canvas.getContext('2d');
-
+const VELOCITY = 3;
+const mouse = {x: null, y: null};
 
 class Circle {
     constructor(context, x, y, radius, startDirection) {
@@ -11,8 +12,10 @@ class Circle {
         this.y = y;
         this.radius = radius;
         this.context = context;
-        this.dx = 5 * startDirection;
-        this.dy = 5 * startDirection;
+        this.dx = VELOCITY * startDirection;
+        this.dy = VELOCITY * startDirection;
+        this.grown = false;
+        this.color = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
     }
 
     draw() {
@@ -20,10 +23,19 @@ class Circle {
         this.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
         // this.context.strokeStyle = 'blue';
         // this.context.stroke();
+        this.context.fillStyle = this.color;
         this.context.fill();
     }
 
     move() {
+        if (!this.grown && this.isNearbyMouse()) {
+            this.radius += 50;
+            this.grown = true;
+        } else if (this.grown && !this.isNearbyMouse()) {
+            this.radius -= 50;
+            this.grown = false;
+        }
+
         if (this.x + this.radius > canvas.width || this.x - this.radius < 0) {
             this.dx = -this.dx;
             this.x += this.dx;
@@ -37,6 +49,13 @@ class Circle {
         this.x += this.dx;
         this.y += this.dy;
         this.draw();
+    }
+
+    isNearbyMouse() {
+        const xDistance = Math.abs(this.x - mouse.x);
+        const yDistance = Math.abs(this.y - mouse.y);
+
+        return xDistance < 150 && yDistance < 150;
     }
 }
 
@@ -58,7 +77,7 @@ function getRandomY(radius) {
 }
 
 const shapes = [];
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 20; i++) {
     const radius = Math.random() * 100;
     const startDirection = Math.random() * 2 >= 1 ? -1 : 1;
     const circle = new Circle(context, getRandomX(radius), getRandomY(radius), radius, startDirection);
@@ -77,9 +96,13 @@ function animate() {
 animate();
 
 document.addEventListener('click', (event) => {
-    console.log(event);
     const radius = Math.random() * 100;
     const startDirection = Math.random() * 2 >= 1 ? -1 : 1;
     const circle = new Circle(context, event.clientX, event.clientY, radius, startDirection);
     shapes.push(circle);
+});
+
+document.addEventListener('mousemove', (event) => {
+    mouse.x = event.x;
+    mouse.y = event.y;
 });
