@@ -31,7 +31,7 @@ class Circle {
 
     move() {
         if (this.isNearbyMouse()) {
-            this.grow += this.grow < 100 ? 1 : 0;
+            this.grow += this.grow < 100 ? 2 : 0;
         } else {
             this.grow -= this.grow > 0 ? 1 : 0;
         }
