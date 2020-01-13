@@ -3,7 +3,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 const context = canvas.getContext('2d');
-const VELOCITY = 3;
+const VELOCITY = 2;
 const mouse = {x: null, y: null};
 
 class Circle {
@@ -31,7 +31,7 @@ class Circle {
 
     move() {
         if (this.isNearbyMouse()) {
-            this.grow += this.grow < 50 ? 1 : 0;
+            this.grow += this.grow < 100 ? 1 : 0;
         } else {
             this.grow -= this.grow > 0 ? 1 : 0;
         }
@@ -77,8 +77,8 @@ function getRandomY(radius) {
 }
 
 const shapes = [];
-for (let i = 0; i < 20; i++) {
-    const radius = Math.random() * 100;
+for (let i = 0; i < 200; i++) {
+    const radius = Math.random() * 5;
     const startDirection = Math.random() * 2 >= 1 ? -1 : 1;
     const circle = new Circle(context, getRandomX(radius), getRandomY(radius), radius, startDirection);
     shapes.push(circle);
@@ -96,7 +96,7 @@ function animate() {
 animate();
 
 document.addEventListener('click', (event) => {
-    const radius = Math.random() * 100;
+    const radius = Math.random() * 5;
     const startDirection = Math.random() * 2 >= 1 ? -1 : 1;
     const circle = new Circle(context, event.clientX, event.clientY, radius, startDirection);
     shapes.push(circle);
@@ -105,4 +105,8 @@ document.addEventListener('click', (event) => {
 document.addEventListener('mousemove', (event) => {
     mouse.x = event.x;
     mouse.y = event.y;
+});
+window.addEventListener('resize', () => {
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
 });
