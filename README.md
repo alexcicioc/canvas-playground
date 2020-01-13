@@ -1,1 +1,1 @@
-# svcourse2020.1
+# canvas-playground
