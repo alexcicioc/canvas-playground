@@ -14,34 +14,34 @@ class Circle {
         this.context = context;
         this.dx = VELOCITY * startDirection;
         this.dy = VELOCITY * startDirection;
-        this.grown = false;
+        this.grow = 0;
         this.color = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
     }
 
     draw() {
         this.context.beginPath();
-        this.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
-        // this.context.strokeStyle = 'blue';
-        // this.context.stroke();
+        this.context.arc(this.x, this.y, this.totalRadius, 0, 2 * Math.PI, false);
         this.context.fillStyle = this.color;
         this.context.fill();
     }
 
+    get totalRadius() {
+        return this.radius + this.grow;
+    }
+
     move() {
-        if (!this.grown && this.isNearbyMouse()) {
-            this.radius += 50;
-            this.grown = true;
-        } else if (this.grown && !this.isNearbyMouse()) {
-            this.radius -= 50;
-            this.grown = false;
+        if (this.isNearbyMouse()) {
+            this.grow += this.grow < 50 ? 1 : 0;
+        } else {
+            this.grow -= this.grow > 0 ? 1 : 0;
         }
 
-        if (this.x + this.radius > canvas.width || this.x - this.radius < 0) {
+        if (this.x + this.totalRadius > canvas.width || this.x - this.totalRadius < 0) {
             this.dx = -this.dx;
             this.x += this.dx;
         }
 
-        if (this.y + this.radius > canvas.height || this.y - this.radius < 0) {
+        if (this.y + this.totalRadius > canvas.height || this.y - this.totalRadius < 0) {
             this.dy = -this.dy;
             this.y += this.dy;
         }
@@ -55,7 +55,7 @@ class Circle {
         const xDistance = Math.abs(this.x - mouse.x);
         const yDistance = Math.abs(this.y - mouse.y);
 
-        return xDistance < 150 && yDistance < 150;
+        return xDistance < 100 && yDistance < 100;
     }
 }
 
