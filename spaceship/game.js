@@ -7,7 +7,7 @@ window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;
 });
 
-const mouse = {x: 0, y: 0};
+const mouse = {x: window.innerWidth - 100, y: window.innerHeight - 100};
 
 document.addEventListener('mousemove', (event) => {
     mouse.x = event.x;
@@ -41,7 +41,9 @@ function animate() {
     objects.invaders.forEach((invader, index) => {
         invader.move();
         if (isInvaderColliding(invader, objects.ship)) {
-            alert("You're a loser");
+            if (confirm("You crashed your ship, will reload the page")) {
+                window.location.reload();
+            }
         }
     });
 
